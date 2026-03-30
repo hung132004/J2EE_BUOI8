@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Them san pham</title>
+    <style>
+        :root { --text:#183153; --muted:#607792; --line:#dbe6f2; --accent:#f2a93b; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { min-height:100vh; font-family:Georgia,"Times New Roman",serif; color:var(--text); background:radial-gradient(circle at top left, rgba(242,169,59,.14), transparent 22%), linear-gradient(145deg,#f8fbff,#eef5fb 42%,#ffffff); padding:24px; }
+        .wrap { width:min(900px,100%); margin:0 auto; }
+        .card { border-radius:30px; border:1px solid var(--line); background:rgba(255,255,255,.94); box-shadow:0 22px 70px rgba(30,60,90,.12); overflow:hidden; }
+        .head { padding:28px 30px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; align-items:center; }
+        .head h1 { font-size:42px; margin-bottom:8px; }
+        .head p { color:var(--muted); }
+        .form-body { padding:30px; }
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+        .grid .full { grid-column:1 / -1; }
+        label { display:block; margin-bottom:8px; color:#38506e; }
+        input, select { width:100%; padding:14px 15px; border-radius:16px; border:1px solid var(--line); background:#fff; color:var(--text); }
+        .hint { color:var(--muted); font-size:13px; margin-top:6px; }
+        .actions { display:flex; gap:14px; margin-top:22px; }
+        .btn, .btn-secondary { padding:14px 18px; border-radius:16px; border:none; text-decoration:none; font-weight:700; cursor:pointer; }
+        .btn { background:linear-gradient(135deg,#f3ad42,#ffd587); color:#5a3a00; }
+        .btn-secondary { background:#f5f8fc; border:1px solid var(--line); color:var(--text); }
+        .capsule { color:#9f670f; border:1px solid #f4d19a; border-radius:999px; background:#fff6e6; padding:8px 14px; font-size:12px; text-transform:uppercase; letter-spacing:.14em; }
+        @media (max-width:760px) { .grid { grid-template-columns:1fr; } .head { flex-direction:column; align-items:flex-start; } .actions { flex-direction:column; } }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="head">
+            <div><div class="capsule">Admin Studio</div><h1>Them san pham</h1><p>Dang nhap boi <span sec:authentication="name"></span></p></div>
+            <a href="/products" class="btn-secondary">Quay lai danh sach</a>
+        </div>
+        <div class="form-body">
+            <form action="/products/save" method="post" enctype="multipart/form-data">
+                <div class="grid">
+                    <div class="full"><label for="name">Ten san pham</label><input type="text" id="name" name="name" required></div>
+                    <div class="full">
+                        <label for="imageFile">Chon file anh</label>
+                        <input type="file" id="imageFile" name="imageFile" accept="image/*">
+                        <div class="hint">Ho tro cac file anh thong dung nhu JPG, PNG, WEBP.</div>
+                    </div>
+                    <div><label for="price">Gia</label><input type="number" id="price" name="price" step="0.01" min="0" required></div>
+                    <div><label for="categoryId">Category</label><select id="categoryId" name="categoryId"><option value="">Chon category</option><option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option></select></div>
+                </div>
+                <div class="actions"><button type="submit" class="btn">Luu san pham</button><a href="/products" class="btn-secondary">Huy</a></div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

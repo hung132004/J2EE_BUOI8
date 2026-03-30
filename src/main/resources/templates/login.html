@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root { --text:#183153; --muted:#5f7592; --accent:#f2a93b; --line:#dbe6f2; --panel:rgba(255,255,255,.82); }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            min-height:100vh; font-family:Georgia,"Times New Roman",serif; color:var(--text);
+            background:radial-gradient(circle at top left, rgba(242,169,59,.18), transparent 28%), radial-gradient(circle at bottom right, rgba(87,149,255,.18), transparent 26%), linear-gradient(135deg,#f8fbff,#eef5fb 42%,#fdfefe);
+            display:grid; place-items:center; padding:24px;
+        }
+        .shell { width:min(1100px,100%); display:grid; grid-template-columns:1.1fr .9fr; border:1px solid var(--line); border-radius:28px; overflow:hidden; background:#ffffff; box-shadow:0 24px 70px rgba(30,60,90,.14); }
+        .hero { padding:56px; background:linear-gradient(180deg, rgba(255,255,255,.4), transparent), linear-gradient(135deg,#fff8ed,#eef6ff); }
+        .badge { display:inline-flex; padding:8px 14px; border-radius:999px; border:1px solid #f4d19a; color:#9f670f; background:#fff6e6; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
+        .hero h1 { margin-top:24px; font-size:clamp(40px,6vw,72px); line-height:.96; font-weight:600; }
+        .hero p { max-width:480px; margin-top:20px; color:var(--muted); line-height:1.7; font-size:17px; }
+        .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:34px; }
+        .stat { padding:16px; border-radius:18px; background:#ffffff; border:1px solid #e6eef7; }
+        .stat strong { display:block; color:#d18816; font-size:24px; margin-bottom:6px; }
+        .panel { padding:48px 38px; background:var(--panel); border-left:1px solid var(--line); display:flex; align-items:center; }
+        .card { width:100%; }
+        .eyebrow { color:#d18816; font-size:13px; text-transform:uppercase; letter-spacing:.18em; margin-bottom:12px; }
+        .title { font-size:36px; margin-bottom:10px; }
+        .subtitle { color:var(--muted); margin-bottom:28px; line-height:1.7; }
+        .alert { padding:14px 16px; border-radius:14px; margin-bottom:18px; border:1px solid var(--line); }
+        .alert-danger { background:#fff2f3; color:#b8414d; }
+        .alert-success { background:#eefcf5; color:#238858; }
+        .field { margin-bottom:16px; }
+        label { display:block; color:#38506e; margin-bottom:8px; font-size:14px; letter-spacing:.04em; }
+        input { width:100%; padding:15px 16px; border-radius:16px; border:1px solid #dbe6f2; background:#fff; color:#183153; font-size:16px; }
+        input:focus { outline:none; border-color:#f2a93b; box-shadow:0 0 0 4px rgba(242,169,59,.15); }
+        .btn { width:100%; padding:15px; border:none; border-radius:16px; background:linear-gradient(135deg,#f3ad42,#ffd587); color:#5a3a00; font-weight:700; font-size:16px; cursor:pointer; margin-top:8px; }
+        .footer-note { margin-top:18px; color:var(--muted); text-align:center; }
+        .footer-note a { color:#c57b06; text-decoration:none; }
+        @media (max-width:920px) { .shell { grid-template-columns:1fr; } .hero { padding:34px 28px; } .panel { padding:32px 24px; border-left:none; border-top:1px solid var(--line); } .stats { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <section class="hero">
+        <span class="badge">Premium Commerce Panel</span>
+        <h1>Luxury Store Dashboard</h1>
+        <p>Day la cua vao cho mot giao dien quan ly san pham, gio hang va dat hang ro rang, sang va de nhin hon.</p>
+        <div class="stats">
+            <div class="stat"><strong>Search</strong><span>Tim kiem nhanh theo ten</span></div>
+            <div class="stat"><strong>Filter</strong><span>Loc category va sap xep gia</span></div>
+            <div class="stat"><strong>Checkout</strong><span>Gio hang va dat hang theo session</span></div>
+        </div>
+    </section>
+    <section class="panel">
+        <div class="card">
+            <div class="eyebrow">Secure Access</div>
+            <h2 class="title">Dang nhap</h2>
+            <p class="subtitle">Su dung tai khoan da tao de vao he thong va quan ly mua ban.</p>
+            <div th:if="${param.error}" class="alert alert-danger">Ten dang nhap hoac mat khau khong chinh xac.</div>
+            <div th:if="${param.success}" class="alert alert-success">Dang ky thanh cong. Vui long dang nhap.</div>
+            <form method="post" action="/login">
+                <div class="field"><label for="username">Ten dang nhap</label><input type="text" id="username" name="username" required autofocus></div>
+                <div class="field"><label for="password">Mat khau</label><input type="password" id="password" name="password" required></div>
+                <button type="submit" class="btn">Dang nhap ngay</button>
+            </form>
+            <div class="footer-note">Chua co tai khoan? <a href="/register">Tao tai khoan moi</a></div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

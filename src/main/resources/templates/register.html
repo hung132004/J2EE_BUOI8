@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        :root { --text:#183153; --muted:#5f7592; --accent:#f2a93b; --line:#dbe6f2; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            min-height:100vh; font-family:Georgia,"Times New Roman",serif; color:var(--text);
+            background:radial-gradient(circle at 10% 10%, rgba(242,169,59,.16), transparent 24%), radial-gradient(circle at 85% 85%, rgba(87,149,255,.18), transparent 26%), linear-gradient(140deg,#f7fbff,#eef5fb,#ffffff);
+            display:grid; place-items:center; padding:24px;
+        }
+        .panel { width:min(560px,100%); border-radius:28px; background:rgba(255,255,255,.88); border:1px solid var(--line); box-shadow:0 24px 70px rgba(30,60,90,.14); padding:38px; }
+        .eyebrow { color:#d18816; text-transform:uppercase; letter-spacing:.16em; font-size:12px; margin-bottom:14px; }
+        h1 { font-size:42px; margin-bottom:10px; }
+        .desc { color:var(--muted); line-height:1.7; margin-bottom:24px; }
+        .alert { padding:14px 16px; border-radius:14px; background:#fff2f3; border:1px solid #f2d6da; color:#b8414d; margin-bottom:18px; }
+        .grid { display:grid; gap:16px; }
+        label { display:block; margin-bottom:8px; color:#38506e; font-size:14px; }
+        input { width:100%; padding:15px 16px; border-radius:16px; border:1px solid #dbe6f2; background:#fff; color:#183153; font-size:16px; }
+        input:focus { outline:none; border-color:#f2a93b; box-shadow:0 0 0 4px rgba(242,169,59,.15); }
+        .actions { display:flex; gap:14px; margin-top:18px; }
+        .btn, .btn-secondary { flex:1; padding:15px; border-radius:16px; border:none; cursor:pointer; text-decoration:none; text-align:center; font-weight:700; }
+        .btn { background:linear-gradient(135deg,#f3ad42,#ffd587); color:#5a3a00; }
+        .btn-secondary { background:#f5f8fc; color:#183153; border:1px solid #dbe6f2; }
+        .note { margin-top:18px; text-align:center; color:var(--muted); }
+        .note a { color:#c57b06; text-decoration:none; }
+        @media (max-width:640px) { .panel { padding:28px 22px; } .actions { flex-direction:column; } }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <div class="eyebrow">Create Account</div>
+    <h1>Dang ky</h1>
+    <p class="desc">Tao tai khoan moi de truy cap giao dien quan ly san pham va luong mua hang de nhin hon.</p>
+    <div th:if="${param.error}" class="alert">Ten dang nhap da ton tai.</div>
+    <form method="post" action="/register">
+        <div class="grid">
+            <div><label for="fullName">Ho va ten</label><input type="text" id="fullName" name="fullName" required autofocus></div>
+            <div><label for="username">Ten dang nhap</label><input type="text" id="username" name="username" required></div>
+            <div><label for="password">Mat khau</label><input type="password" id="password" name="password" required></div>
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn">Dang ky</button>
+            <a href="/login" class="btn-secondary">Quay lai</a>
+        </div>
+    </form>
+    <div class="note">Da co tai khoan? <a href="/login">Dang nhap</a></div>
+</div>
+</body>
+</html>

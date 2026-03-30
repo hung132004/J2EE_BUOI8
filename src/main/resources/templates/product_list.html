@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sach san pham</title>
+    <style>
+        :root { --text:#183153; --muted:#607792; --accent:#f2a93b; --gold:#c98513; --line:#dbe6f2; --panel:#ffffff; --bg:#f6fbff; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:Georgia,"Times New Roman",serif; color:var(--text); min-height:100vh; background:radial-gradient(circle at top left, rgba(242,169,59,.14), transparent 22%), radial-gradient(circle at bottom right, rgba(87,149,255,.14), transparent 24%), linear-gradient(145deg,#f8fbff,#eef5fb 42%,#ffffff); }
+        .page { width:min(1320px, calc(100% - 32px)); margin:18px auto 30px; }
+        .hero, .panel { border:1px solid var(--line); border-radius:30px; background:rgba(255,255,255,.92); box-shadow:0 22px 70px rgba(30,60,90,.12); }
+        .hero { overflow:hidden; margin-bottom:18px; }
+        .hero-top { padding:28px 30px; display:flex; justify-content:space-between; align-items:center; gap:18px; border-bottom:1px solid var(--line); }
+        .capsule { display:inline-flex; padding:8px 14px; border-radius:999px; border:1px solid #f4d19a; color:#9f670f; background:#fff6e6; margin-bottom:14px; text-transform:uppercase; letter-spacing:.12em; font-size:12px; }
+        .hero-title h1 { font-size:clamp(34px,5vw,56px); line-height:1; margin-bottom:10px; }
+        .hero-title p { color:var(--muted); max-width:640px; line-height:1.7; }
+        .hero-actions, .nav-actions, .filters-actions, .row-actions, .cart-actions { display:flex; gap:10px; align-items:center; }
+        .hero-bottom { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; padding:24px 30px 30px; }
+        .inner-panel, .stats { background:#fbfdff; border:1px solid var(--line); border-radius:24px; }
+        .inner-panel, .panel { padding:22px; }
+        .stats { padding:22px; display:grid; gap:14px; }
+        .stats-card { padding:16px; border-radius:18px; background:#fff; border:1px solid #e8eff7; }
+        .stats-card strong { display:block; color:var(--gold); font-size:28px; margin-bottom:6px; }
+        .section-title { margin-bottom:16px; font-size:24px; }
+        .filters { display:grid; grid-template-columns:1.7fr 1fr 1fr auto; gap:12px; align-items:end; }
+        label { display:block; margin-bottom:8px; color:#38506e; font-size:14px; }
+        input[type="text"], input[type="number"], select { width:100%; padding:13px 14px; border-radius:16px; border:1px solid var(--line); background:#fff; color:var(--text); }
+        .btn, .btn-secondary, .btn-danger { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; border-radius:16px; border:1px solid transparent; text-decoration:none; cursor:pointer; font-weight:700; white-space:nowrap; }
+        .btn { background:linear-gradient(135deg,#f3ad42,#ffd587); color:#5a3a00; }
+        .btn-secondary { background:#f5f8fc; color:var(--text); border-color:var(--line); }
+        .btn-danger { background:#fff2f3; border-color:#f2d6da; color:#b8414d; }
+        .message { padding:14px 16px; border-radius:18px; margin-bottom:16px; background:#eefcf5; border:1px solid #cdeedb; color:#238858; }
+        .table-wrap { overflow:auto; border-radius:22px; border:1px solid #e8eff7; }
+        table { width:100%; border-collapse:collapse; min-width:900px; }
+        th, td { padding:18px 16px; border-bottom:1px solid #e8eff7; text-align:left; }
+        th { color:#48617f; background:#f9fbfe; font-size:14px; letter-spacing:.06em; text-transform:uppercase; }
+        .product-name { display:flex; flex-direction:column; gap:4px; }
+        .product-name small, .pagination span { color:var(--muted); }
+        .price { color:var(--gold); font-size:18px; font-weight:700; }
+        .category-pill { display:inline-flex; padding:8px 12px; border-radius:999px; background:#f5f8fc; border:1px solid var(--line); color:#48617f; }
+        .pagination { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:18px; }
+        @media (max-width:980px) { .hero-top, .hero-bottom { grid-template-columns:1fr; display:grid; } .filters { grid-template-columns:1fr; } }
+        @media (max-width:760px) { .page { width:calc(100% - 20px); } .hero-top, .hero-bottom { padding-left:18px; padding-right:18px; } .hero-actions, .nav-actions, .filters-actions, .row-actions, .cart-actions { flex-wrap:wrap; } }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+    <section class="hero">
+        <div class="hero-top">
+            <div class="hero-title">
+                <span class="capsule">Vip Pro Storefront</span>
+                <h1>Quan ly san pham</h1>
+                <p>Tim kiem, loc, sap xep, phan trang va mua hang tren mot giao dien sang, sach va de nhin.</p>
+            </div>
+            <div class="nav-actions">
+                <a th:href="@{/cart}" class="btn-secondary">Gio hang (<span th:text="${cartItemCount}">0</span>)</a>
+                <a sec:authorize="hasRole('ADMIN')" href="/products/add" class="btn">Them san pham</a>
+                <form method="post" action="/logout"><button type="submit" class="btn-secondary">Dang xuat</button></form>
+            </div>
+        </div>
+        <div class="hero-bottom">
+            <div class="inner-panel">
+                <h2 class="section-title">Bo loc thong minh</h2>
+                <form th:action="@{/products}" method="get" class="filters">
+                    <div><label for="keyword">Tim theo ten</label><input id="keyword" type="text" name="keyword" th:value="${keyword}" placeholder="Nhap keyword san pham"></div>
+                    <div><label for="categoryId">Category</label><select id="categoryId" name="categoryId"><option value="">Tat ca</option><option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${selectedCategoryId != null and selectedCategoryId == c.id}"></option></select></div>
+                    <div><label for="sort">Sap xep</label><select id="sort" name="sort"><option value="" th:selected="${selectedSort == ''}">Mac dinh</option><option value="priceAsc" th:selected="${selectedSort == 'priceAsc'}">Gia tang dan</option><option value="priceDesc" th:selected="${selectedSort == 'priceDesc'}">Gia giam dan</option></select></div>
+                    <div class="filters-actions"><button type="submit" class="btn">Ap dung</button><a th:href="@{/products}" class="btn-secondary">Reset</a></div>
+                </form>
+            </div>
+            <aside class="stats">
+                <div class="stats-card"><strong th:text="${cartItemCount}">0</strong><span>San pham trong gio hang</span></div>
+                <div class="stats-card"><strong>5</strong><span>San pham moi trang</span></div>
+                <div class="stats-card"><strong><span sec:authentication="name"></span></strong><span>Tai khoan dang dang nhap</span></div>
+            </aside>
+        </div>
+    </section>
+    <section class="panel">
+        <h2 class="section-title">Danh sach hien tai</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>ID</th><th>San pham</th><th>Gia</th><th>Category</th><th>Thao tac</th></tr></thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(products)}"><td colspan="5">Khong co san pham phu hop.</td></tr>
+                <tr th:each="p : ${products}">
+                    <td th:text="${p.id}"></td>
+                    <td><div class="product-name"><strong th:text="${p.name}"></strong><small th:text="${p.image != null and !#strings.isEmpty(p.image) ? p.image : 'Chua co duong dan hinh anh'}"></small></div></td>
+                    <td class="price" th:text="${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}"></td>
+                    <td><span class="category-pill" th:text="${p.category != null ? p.category.name : 'N/A'}"></span></td>
+                    <td>
+                        <div class="row-actions" sec:authorize="hasRole('ADMIN')"><a th:href="@{/products/edit/{id}(id=${p.id})}" class="btn-secondary">Sua</a><a th:href="@{/products/delete/{id}(id=${p.id})}" class="btn-danger" onclick="return confirm('Ban chac chan muon xoa?')">Xoa</a></div>
+                        <div class="cart-actions" style="margin-top:10px;">
+                            <form th:action="@{/cart/add}" method="post" class="cart-actions">
+                                <input type="hidden" name="productId" th:value="${p.id}">
+                                <input type="hidden" name="keyword" th:value="${keyword}">
+                                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+                                <input type="hidden" name="sort" th:value="${selectedSort}">
+                                <input type="hidden" name="page" th:value="${currentPage}">
+                                <input type="number" name="quantity" min="1" value="1" style="width:82px">
+                                <button type="submit" class="btn">Them vao gio</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <div class="hero-actions">
+                <a th:if="${hasPrevious}" th:href="@{/products(keyword=${keyword},categoryId=${selectedCategoryId},sort=${selectedSort},page=${currentPage - 1})}" class="btn-secondary">Previous</a>
+                <a th:if="${hasNext}" th:href="@{/products(keyword=${keyword},categoryId=${selectedCategoryId},sort=${selectedSort},page=${currentPage + 1})}" class="btn-secondary">Next</a>
+            </div>
+            <span>Trang <strong th:text="${totalPages == 0 ? 0 : currentPage + 1}">1</strong> / <strong th:text="${totalPages}">1</strong></span>
+        </div>
+    </section>
+</div>
+</body>
+</html>
